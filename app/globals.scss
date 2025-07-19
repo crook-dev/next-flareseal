@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -221,9 +222,7 @@ p {
 }
 
 h1 {
-  @apply text-4xl;
-  @apply font-bold;
-  @apply leading-none;
+  @apply text-4xl font-bold leading-none text-primary;
   font-family: "Montserrat", sans-serif;
 }
 
@@ -236,11 +235,8 @@ h2 {
 }
 
 h3 {
-  @apply text-xl;
-  @apply font-bold;
-  @apply leading-none;
+  @apply text-xl font-bold leading-none mb-4;
   font-family: "Montserrat", sans-serif;
-  @apply mb-4;
 }
 
 p {

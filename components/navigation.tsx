@@ -4,6 +4,7 @@ import { Menu, X, Search, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/cart-context';
 import CartIcon from './products/cart-icon';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface NavigationLink {
   href: string;
@@ -16,10 +17,10 @@ export default function Navigation() {
   const cartItemCount = getItemCount();
 
   const navigationLinks: NavigationLink[] = [
-    { href: '/products', label: 'Products' },
-    { href: '/categories', label: 'Categories' },
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/', label: 'Home' },
+    { href: '/products', label: 'Shop Now' },
+    { href: '/faqs', label: 'FAQs' },
+    { href: '/knowledge-base', label: 'Knowledge Base' },
   ];
 
   const toggleMenu = () => {
@@ -33,9 +34,7 @@ export default function Navigation() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <div className="bg-black text-white px-3 py-2 rounded-md font-bold text-lg">
-                FLARESEAL
-              </div>
+              <Image src="/images/logo.png" alt="Flareseal Logo" width={107} height={48} />
               </Link>
           </div>
 
@@ -54,11 +53,7 @@ export default function Navigation() {
 
           {/* Right side - Search and Cart */}
           <div className="flex items-center space-x-4">
-            {/* Search Icon - Desktop */}
-            <button className="hidden md:block p-2 text-gray-700 hover:text-black transition-colors duration-200">
-              <Search size={20} />
-            </button>
-
+       
             {/* Cart Icon with Mini Cart - Desktop */}
             <div className="hidden md:block">
               <CartIcon />
@@ -92,17 +87,6 @@ export default function Navigation() {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {/* Mobile Search */}
-            <div className="px-3 py-2">
-              <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-md">
-                <Search size={16} className="text-gray-500" />
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="bg-transparent outline-none text-sm flex-1"
-                />
-              </div>
-            </div>
 
             {/* Mobile Navigation Links */}
             {navigationLinks.map((link) => (

@@ -60,7 +60,7 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black bg-opacity-30 z-40" onClick={onClose} />
+      <div className="fixed inset-0 bg-black opacity-75 z-40" onClick={onClose} />
       
       {/* Mini Cart */}
       <div

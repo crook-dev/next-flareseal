@@ -33,22 +33,32 @@ export default async function ProductsPage() {
     // Filter out empty collections
     const nonEmptyCollections = collections.filter(collection => collection.products.length > 0);
 
+    const reorderedCollections = nonEmptyCollections.length >= 2 
+  ? [
+      nonEmptyCollections[1], // Second collection becomes first
+      nonEmptyCollections[0], // First collection becomes second
+      ...nonEmptyCollections.slice(2) // Keep any remaining collections in their original order
+    ]
+  : nonEmptyCollections; // If less than 2 collections, keep original order
+
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
-          <div className="mb-12 text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Products</h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover our complete collection of mini-split systems and HVAC products, 
-              organized by category for easy browsing.
+          <div className="mb-12 text-center pb-12">
+            <h1 className="mb-4">Leak-Free Connections by FlareSeal®</h1>
+            <p className="text-lg mx-auto">
+            The seal protects against the primary area of flare leaks… on the sealing surface. 
+            FlareSeal® fits all common SAE flare connections for our industry. It not only provides 
+            a long-term leak-free connection on new installations or products, but it also can be used 
+            to stop weeping connections in existing systems.
             </p>
           </div>
           
           {/* Collections Sections */}
-          {nonEmptyCollections.length > 0 ? (
+          {reorderedCollections.length > 0 ? (
             <div className="space-y-16">
-              {nonEmptyCollections.map((collection) => (
+              {reorderedCollections.map((collection) => (
                 <CollectionSection 
                   key={collection.id} 
                   collection={collection} 
@@ -57,8 +67,8 @@ export default async function ProductsPage() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No collections found</h3>
-              <p className="text-gray-600">Check back soon for new products.</p>
+              <h3 className="text-lg font-medium mb-2">No products found</h3>
+              <p>Check back soon for new products.</p>
             </div>
           )}
         </div>
@@ -70,8 +80,8 @@ export default async function ProductsPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Oops! Something went wrong</h1>
-          <p className="text-gray-600 mb-4">We couldn&apos;t load the products right now.</p>
+          <h1 className="text-2xl font-bold mb-4">Oops! Something went wrong</h1>
+          <p>We couldn&apos;t load the products right now.</p>
           <button 
             onClick={() => window.location.reload()} 
             className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
