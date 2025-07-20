@@ -55,35 +55,48 @@ interface PurchaseItem {
   quantity: number;
 }
 
-// Global dataLayer interface
-declare global {
-  interface Window {
-    dataLayer: GTMEvent[];
-  }
+// Type for window with dataLayer (avoiding global declaration conflicts)
+interface WindowWithDataLayer extends Window {
+  dataLayer?: DataLayerArray;
 }
+
+// Type for window.dataLayer (avoiding global declaration conflicts)
+type DataLayerArray = GTMEvent[];
 
 // Initialize dataLayer if it doesn't exist
 export const initializeGTM = (): void => {
   if (typeof window !== 'undefined') {
-    window.dataLayer = window.dataLayer || [];
+    const windowWithDataLayer = window as WindowWithDataLayer;
+    windowWithDataLayer.dataLayer = windowWithDataLayer.dataLayer || [];
   }
+}
+
+// Helper function to get dataLayer safely
+const getDataLayer = (): DataLayerArray | undefined => {
+  if (typeof window !== 'undefined') {
+    const windowWithDataLayer = window as WindowWithDataLayer;
+    return windowWithDataLayer.dataLayer;
+  }
+  return undefined;
 }
 
 // Track page views
 export const trackPageView = (url: string, title: string): void => {
-  if (typeof window !== 'undefined' && window.dataLayer) {
+  const dataLayer = getDataLayer();
+  if (dataLayer) {
     const event: GTMPageView = {
       event: 'page_view',
       page_title: title,
       page_location: url,
     };
-    window.dataLayer.push(event);
+    dataLayer.push(event);
   }
 }
 
 // Track product views
 export const trackProductView = (product: FormattedProduct): void => {
-  if (typeof window !== 'undefined' && window.dataLayer) {
+  const dataLayer = getDataLayer();
+  if (dataLayer) {
     const event: GTMViewItem = {
       event: 'view_item',
       ecommerce: {
@@ -98,7 +111,7 @@ export const trackProductView = (product: FormattedProduct): void => {
         }]
       }
     };
-    window.dataLayer.push(event);
+    dataLayer.push(event);
   }
 }
 
@@ -108,7 +121,8 @@ export const trackAddToCart = (
   variant: FormattedVariant, 
   quantity: number = 1
 ): void => {
-  if (typeof window !== 'undefined' && window.dataLayer) {
+  const dataLayer = getDataLayer();
+  if (dataLayer) {
     const event: GTMAddToCart = {
       event: 'add_to_cart',
       ecommerce: {
@@ -124,7 +138,7 @@ export const trackAddToCart = (
         }]
       }
     };
-    window.dataLayer.push(event);
+    dataLayer.push(event);
   }
 }
 
@@ -134,7 +148,8 @@ export const trackPurchase = (
   items: PurchaseItem[], 
   total: number
 ): void => {
-  if (typeof window !== 'undefined' && window.dataLayer) {
+  const dataLayer = getDataLayer();
+  if (dataLayer) {
     const event: GTMPurchase = {
       event: 'purchase',
       ecommerce: {
@@ -150,7 +165,7 @@ export const trackPurchase = (
         }))
       }
     };
-    window.dataLayer.push(event);
+    dataLayer.push(event);
   }
 }
 
@@ -159,11 +174,12 @@ export const trackEvent = (
   eventName: string, 
   parameters: Record<string, unknown> = {}
 ): void => {
-  if (typeof window !== 'undefined' && window.dataLayer) {
+  const dataLayer = getDataLayer();
+  if (dataLayer) {
     const event: GTMEvent = {
       event: eventName,
       ...parameters
     };
-    window.dataLayer.push(event);
+    dataLayer.push(event);
   }
 }
