@@ -4,6 +4,8 @@ import ProductDetail from '@/components/products/product-component';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { trackProductView } from '@/lib/gtm';
 
 interface ProductPageProps {
   params: Promise<{
@@ -255,6 +257,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="min-h-screen bg-white">
+      <ProductViewTracker product={product} />
       {/* Breadcrumb */}
       <nav className="bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -298,6 +301,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
       />
     </div>
   );
+}
+
+function ProductViewTracker({ product }: { product: any }) {
+  useEffect(() => {
+    trackProductView(product);
+  }, [product]);
+
+  return null; 
 }
 
 // Generate static params for all products at build time

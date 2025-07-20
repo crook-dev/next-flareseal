@@ -1,10 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FormattedProduct, FormattedVariant } from '@/types/shopify';
 import { ShoppingCart, Check } from 'lucide-react';
 import { useCart } from '@/context/cart-context';
 import RelatedProducts from '@/components/products/related-products'; // Add this import
+import { trackAddToCart, trackProductView } from '@/lib/gtm';
 
 interface ProductDetailProps {
   product: FormattedProduct;
@@ -24,6 +25,10 @@ export default function ProductDetail({
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false); 
+
+  useEffect(() => {
+    trackProductView(product);
+  }, [product]);
 
   const handleVariantChange = (variant: FormattedVariant) => {
     setSelectedVariant(variant);
@@ -66,6 +71,8 @@ export default function ProductDetail({
       // Show success feedback
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
+
+      trackAddToCart(product, selectedVariant, quantity)
       
     } catch (error) {
       console.error('Error adding to cart:', error);
