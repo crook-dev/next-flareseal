@@ -3,10 +3,154 @@ import CollectionSection from '@/components/products/collection-section';
 import { FormattedCollection } from '@/types/shopify';
 import { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Products | FlareSeal',
-  description: 'Browse our complete collection of mini-split systems and HVAC products.',
-};
+
+export async function generateMetadata(): Promise<Metadata> {
+  console.log('🔍 Starting metadata generation...');
+  
+  try {
+    console.log('📡 Fetching collections from Shopify...');
+    
+    // Fetch collections to get actual product count
+    const rawCollections = await getAllCollections();
+    console.log(`✅ Successfully fetched ${rawCollections.length} collections`);
+    
+    const totalProducts = rawCollections.reduce((total, collection) => {
+      console.log(`📦 Collection "${collection.title}" has ${collection.products.length} products`);
+      return total + collection.products.length;
+    }, 0);
+    
+    console.log(`🎯 Total products: ${totalProducts}`);
+
+    const metadata = {
+      title: 'HVAC Flare Connection Products | FlareSeal® Mini-Split & Refrigeration Systems',
+      description: `Shop ${totalProducts}+ FlareSeal® leak-free flare connection products for HVAC mini-splits and refrigeration systems. Available in all standard SAE sizes: 1/4", 3/8", 1/2", 5/8", 3/4". Prevent refrigerant leaks permanently.`,
+      openGraph: {
+        title: 'HVAC Flare Connection Products | FlareSeal® Mini-Split & Refrigeration Systems',
+        description: `Shop ${totalProducts}+ FlareSeal® leak-free flare connection products for HVAC mini-splits and refrigeration systems. Available in all standard SAE sizes. Prevent refrigerant leaks permanently.`,
+        type: 'website' as const,
+        locale: 'en_US',
+        images: [
+          {
+            url: 'https://www.flareseal.com/social.jpg',
+            width: 1200,
+            height: 630,
+            alt: 'FlareSeal HVAC Products',
+          },
+        ],
+      },
+      alternates: {
+        canonical: 'https://www.flareseal.com/products',
+      },
+      other: {
+        'application/ld+json': JSON.stringify([
+          // Product Collection Schema
+          {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            '@id': 'https://www.flareseal.com/products',
+            name: 'FlareSeal HVAC Products',
+            description: 'Complete collection of leak-free flare connection products for HVAC mini-splits and refrigeration systems',
+            url: 'https://www.flareseal.com/products',
+            mainEntity: {
+              '@type': 'ItemList',
+              name: 'FlareSeal® Product Collection',
+              description: 'Leak-free flare connection solutions for HVAC and refrigeration',
+              numberOfItems: totalProducts,
+            },
+            breadcrumb: {
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Home',
+                  item: 'https://www.flareseal.com'
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: 'Products',
+                  item: 'https://www.flareseal.com/products'
+                }
+              ]
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'FlareSeal',
+              url: 'https://www.flareseal.com',
+              logo: 'https://www.flareseal.com/images/logo.png'
+            }
+          },
+          // Organization Schema
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            '@id': 'https://www.flareseal.com/#organization',
+            name: 'FlareSeal',
+            url: 'https://www.flareseal.com',
+            logo: 'https://www.flareseal.com/images/logo.png',
+            description: 'Leak-free flare connection solutions for HVAC and refrigeration systems',
+            contactPoint: {
+              '@type': 'ContactPoint',
+              contactType: 'customer service',
+              email: 'support@flareseal.com',
+              telephone: '+1-800-455-9628'
+            },
+            sameAs: [
+              'https://www.facebook.com/flareseal'
+            ],
+            hasOfferCatalog: {
+              '@type': 'OfferCatalog',
+              name: 'FlareSeal Products',
+              itemListElement: rawCollections.map(collection => ({
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Product',
+                  name: collection.title,
+                  description: collection.description || `${collection.title} flare seal products`
+                }
+              }))
+            }
+          }
+        ])
+      },
+    };
+
+    console.log('✅ Metadata generated successfully');
+    return metadata;
+    
+  } catch (error) {
+    console.error('❌ Error generating metadata:', error);
+    console.error('📊 Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    
+    // Fallback metadata if API fails
+    console.log('🔄 Using fallback metadata');
+    return {
+      title: 'HVAC Flare Connection Products | FlareSeal® Mini-Split & Refrigeration Systems',
+      description: 'Shop FlareSeal® leak-free flare connection products for HVAC mini-splits and refrigeration systems. Available in all standard SAE sizes. Prevent refrigerant leaks permanently.',
+      openGraph: {
+        title: 'HVAC Flare Connection Products | FlareSeal®',
+        description: 'Shop FlareSeal® leak-free flare connection products for HVAC mini-splits and refrigeration systems.',
+        type: 'website' as const,
+        locale: 'en_US',
+        images: [
+          {
+            url: 'https://www.flareseal.com/social.jpg',
+            width: 1200,
+            height: 630,
+            alt: 'FlareSeal HVAC Products',
+          },
+        ],
+      },
+      alternates: {
+        canonical: 'https://www.flareseal.com/products',
+      },
+    };
+  }
+}
 
 // SEO Content by Collection Handle
 const collectionSEOContent = {
@@ -63,7 +207,7 @@ export default async function ProductsPage() {
 
     const reorderedCollections = nonEmptyCollections.length >= 2 
       ? [
-          nonEmptyCollections[1], // Second collection becomes first
+          nonEmptyCollections[1], // Second collection becomes firFlareSealst
           nonEmptyCollections[0], // First collection becomes second
           ...nonEmptyCollections.slice(2) // Keep any remaining collections in their original order
         ]

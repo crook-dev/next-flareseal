@@ -6,21 +6,42 @@ import { Metadata } from 'next';
 import HomeHero from '@/components/home-hero';
 
 export const metadata: Metadata = {
-  title: "FlareSeal – The FlareSeal has been perfected for the Refrigeration and HVAC industry!",
-  description: "The Flare Seal prevents and eliminates refrigerant leaks in Refrigeration and HVAC systems. Leak free flare connections",
+  title: "FlareSeal - Leak-Free HVAC Flare Connections for Mini Splits & Refrigeration",
+  description: "Prevent refrigerant leaks with FlareSeal - the permanent, serviceable flare connection solution for HVAC mini splits, refrigeration systems, and more. Easy clip-on installation.",
   openGraph: {
-    title: "FlareSeal – The FlareSeal has been perfected for the Refrigeration and HVAC industry!",
-    description: "The Flare Seal prevents and eliminates refrigerant leaks in Refrigeration and HVAC systems. Leak free flare connections",
+    title: "FlareSeal - Leak-Free HVAC Flare Connections for Mini Splits & Refrigeration",
+    description: "Prevent refrigerant leaks with FlareSeal - the permanent, serviceable flare connection solution for HVAC mini splits, refrigeration systems, and more. Easy clip-on installation.",
     type: "website",
     locale: "en_US",
     images: [
       {
-        url: "https://nuxt.com/social.jpg",
+        url: "https://www.flareseal.com/social.jpg",
         width: 1200,
         height: 630,
         alt: "FlareSeal",
       },
     ],
+  },
+  alternates: {
+    canonical: 'https://www.flareseal.com',
+  },
+  other: {
+    'application/ld+json': JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'FlareSeal',
+      url: 'https://www.flareseal.com',
+      logo: 'https://www.flareseal.com/images/logo.png',
+      description: 'Leak-free flare connection solutions for HVAC and refrigeration systems',
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        email: 'support@flareseal.com' // if you have a contact page
+      },
+      sameAs: [
+        'https://www.facebook.com/flareseal',
+      ]
+    }),
   },
 };
 
