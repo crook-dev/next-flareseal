@@ -42,7 +42,7 @@ export function ShareButton({ title, description, url }: ShareButtonProps) {
           }
         }
         break
-      case 'twitter':
+      case 'X':
         window.open(`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`)
         break
       case 'facebook':
@@ -83,7 +83,7 @@ export function ShareButton({ title, description, url }: ShareButtonProps) {
       label: 'X',
       icon: X,
       description: 'Share on X',
-      color: 'bg-sky-500 hover:bg-sky-600'
+      color: 'bg-black hover:bg-gray-800'
     },
     {
       id: 'facebook',
@@ -156,6 +156,7 @@ export function ShareButton({ title, description, url }: ShareButtonProps) {
                     key={option.id}
                     onClick={() => handleShare(option.id)}
                     className="w-full flex items-center gap-3 px-3 py-2 text-left text-sm rounded-md hover:bg-gray-50 transition-colors"
+                    aria-label={`Share on ${option.label}`}
                   >
                     <div className={`w-8 h-8 rounded-full ${option.color} flex items-center justify-center text-white`}>
                       <Icon className="h-4 w-4" />

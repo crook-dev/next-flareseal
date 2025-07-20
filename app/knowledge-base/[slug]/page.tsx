@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { STATIC_KNOWLEDGE_BASE_ARTICLES } from '@/lib/staticKnowledgeBaseData'
 import { MarkdownContent } from '@/components/knowledge-base/MarkdownContent'
-import { ArrowLeft, Clock, Calendar, BookOpen, ArrowRight, Share2 } from 'lucide-react'
+import { ArrowLeft, Clock, Calendar, BookOpen, ArrowRight } from 'lucide-react'
 import { ShareButton } from '@/components/ShareButton'
 
 interface Props {
