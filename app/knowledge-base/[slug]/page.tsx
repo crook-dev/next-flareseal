@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator'
 import { STATIC_KNOWLEDGE_BASE_ARTICLES } from '@/lib/staticKnowledgeBaseData'
 import { MarkdownContent } from '@/components/knowledge-base/MarkdownContent'
 import { ArrowLeft, Clock, Calendar, BookOpen, ArrowRight, Share2 } from 'lucide-react'
+import { ShareButton } from '@/components/ShareButton'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -73,6 +74,8 @@ export default async function KnowledgeBaseArticlePage({ params }: Props) {
   if (!article) {
     notFound()
   }
+
+  
 
   const relatedArticles = getRelatedArticles(article)
 
@@ -164,10 +167,11 @@ export default async function KnowledgeBaseArticlePage({ params }: Props) {
           )}
 
           {/* Share Button */}
-          <Button variant="outline" size="sm" className="gap-2">
-            <Share2 className="h-4 w-4" />
-            Share Article
-          </Button>
+          <ShareButton 
+            title={article.title} 
+            description={article.description} 
+            url={`${process.env.URL || 'https://flareseal.com'}/knowledge-base/${slug}`}
+          />
         </header>
         
         {/* Article Content */}
