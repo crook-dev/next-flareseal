@@ -24,25 +24,22 @@ async function getProductPages() {
 
 function getKnowledgeBasePages() {
   try {
-    const kbDirectory = path.join(process.cwd(), 'content/knowledge-base')    
+    const kbDirectory = path.join(process.cwd(), 'knowledgebase')    
     if (!fs.existsSync(kbDirectory)) {
       console.warn(`Knowledge base directory not found: ${kbDirectory}`)
       return []
     }
-    
     const filenames = fs.readdirSync(kbDirectory)
-    
+    const buildTime = new Date()
     return filenames
       .filter(name => name.endsWith('.md'))
       .map(name => {
-        const slug = name.replace(/\.md$/, '')
-        const filePath = path.join(kbDirectory, name)
-        const stats = fs.statSync(filePath)
+        const slug = name.replace('.md', '')
         
         return {
           url: `${baseUrl}/knowledge-base/${slug}`,
-          lastModified: stats.mtime,
-          changeFrequency: 'weekly' as const,
+          lastModified: buildTime,
+          changeFrequency: 'monthly' as const,
           priority: 0.7,
         }
       })
