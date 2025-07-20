@@ -1,9 +1,10 @@
 // app/products/[handle]/page.tsx
-import { getProductByHandle, formatProductData, getAllProducts } from '@/lib/shopify';
+import { getProductByHandle, formatProductData, getAllProducts, getAllCollections } from '@/lib/shopify';
 import ProductDetail from '@/components/products/product-component';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { FormattedProduct, FormattedCollection } from '@/types/shopify';
 
 interface ProductPageProps {
   params: {
@@ -64,6 +65,35 @@ export default async function ProductPage({ params }: ProductPageProps) {
   
   const product = formatProductData(rawProduct);
 
+  // Fetch all collections to find which collection this product belongs to
+  const rawCollections = await getAllCollections();
+  
+  // Format collections data
+  const collections: FormattedCollection[] = rawCollections.map(collection => ({
+    id: collection.id,
+    title: collection.title,
+    handle: collection.handle,
+    description: collection.description,
+    descriptionHtml: collection.descriptionHtml,
+    image: collection.image ? {
+      id: collection.image.id,
+      url: collection.image.url,
+      altText: collection.image.altText || collection.title,
+      width: collection.image.width,
+      height: collection.image.height,
+    } : undefined,
+    products: collection.products.map(formatProductData)
+  }));
+
+  // Find the collection that contains this product
+  const productCollection = collections.find(collection => 
+    collection.products.some(p => p.id === product.id)
+  );
+
+  // Get collection products (excluding current product)
+  const collectionProducts = productCollection?.products || [];
+  const collectionTitle = productCollection?.title;
+
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
@@ -77,12 +107,22 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <svg className="h-4 w-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
               </svg>
-              <a href="/products" className="text-gray-500 hover:text-gray-700">
+              <Link href="/products" className="text-gray-500 hover:text-gray-700">
                 Products
-              </a>
+              </Link>
               <svg className="h-4 w-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
               </svg>
+              {collectionTitle && (
+                <>
+                  <Link href="/products" className="text-gray-500 hover:text-gray-700">
+                    {collectionTitle}
+                  </Link>
+                  <svg className="h-4 w-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                  </svg>
+                </>
+              )}
               <span className="text-gray-900 font-medium truncate max-w-xs">
                 {product.title}
               </span>
@@ -91,18 +131,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </nav>
 
-      {/* Product Detail */}
-      <ProductDetail product={product} />
-
-      {/* Related Products Section - Placeholder */}
-      <div className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Related Products</h2>
-          <div className="text-center py-12 text-gray-500">
-            Related products coming soon...
-          </div>
-        </div>
-      </div>
+      {/* Product Detail with Related Products */}
+      <ProductDetail 
+        product={product}
+        collectionProducts={collectionProducts}
+        collectionTitle={collectionTitle}
+      />
     </div>
   );
 }

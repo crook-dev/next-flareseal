@@ -10,8 +10,8 @@ import {
   CollectionWithProducts
 } from '@/types/shopify';
 
-const shopifyDomain = process.env.SHOPIFY_STORE_DOMAIN;
-const storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+const shopifyDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
 const shopifyUrl = `https://${shopifyDomain}/api/2024-10/graphql.json`;
 
@@ -34,6 +34,46 @@ interface CollectionsResponse {
 
 interface ProductResponse {
   product: ShopifyProduct;
+}
+
+// Cart response types (updated for current API)
+interface CartCreateResponse {
+  cartCreate: {
+    cart: {
+      id: string;
+      checkoutUrl: string;
+      estimatedCost: {
+        subtotalAmount: {
+          amount: string;
+          currencyCode: string;
+        };
+        totalTaxAmount: {
+          amount: string;
+          currencyCode: string;
+        };
+        totalAmount: {
+          amount: string;
+          currencyCode: string;
+        };
+      };
+      lines: {
+        edges: Array<{
+          node: {
+            id: string;
+            quantity: number;
+            merchandise: {
+              id: string;
+              title: string;
+            };
+          };
+        }>;
+      };
+    };
+    userErrors: Array<{
+      field: string[];
+      message: string;
+    }>;
+  };
 }
 
 // Basic GraphQL client for Shopify
@@ -247,6 +287,50 @@ const GET_PRODUCT_QUERY = `
   }
 `;
 
+// Cart creation mutation (updated for current API)
+const CREATE_CART_MUTATION = `
+  mutation cartCreate($input: CartInput!) {
+    cartCreate(input: $input) {
+      cart {
+        id
+        checkoutUrl
+        estimatedCost {
+          subtotalAmount {
+            amount
+            currencyCode
+          }
+          totalTaxAmount {
+            amount
+            currencyCode
+          }
+          totalAmount {
+            amount
+            currencyCode
+          }
+        }
+        lines(first: 250) {
+          edges {
+            node {
+              id
+              quantity
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                }
+              }
+            }
+          }
+        }
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
 // Utility functions to fetch data
 export async function getAllProducts(): Promise<ShopifyProduct[]> {
   let allProducts: ShopifyProduct[] = [];
@@ -333,12 +417,67 @@ export function formatProductData(product: ShopifyProduct): FormattedProduct {
   };
 }
 
-// Generate checkout URL - Updated to handle Shopify variant ID format
-export function generateCheckoutUrl(lineItems: CartLineItem[]): string {
-  const shopifyDomain = 'flareseal.myshopify.com'; // Hardcode your domain
+// MAIN CHECKOUT FUNCTION - Creates a proper Shopify checkout session
+export async function createCheckout(lineItems: CartLineItem[]): Promise<string> {
+  console.log('🛒 Creating Shopify checkout with items:', lineItems);
+  console.log('🔧 DEBUG - shopifyDomain:', shopifyDomain);
+  console.log('🔧 DEBUG - storefrontAccessToken:', storefrontAccessToken ? 'EXISTS' : 'MISSING');
+  console.log('🔧 DEBUG - Raw env vars:', {
+    NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN,
+    NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN ? 'EXISTS' : 'MISSING'
+  });
+  
+  if (!shopifyDomain || !storefrontAccessToken) {
+    throw new Error('Shopify configuration missing. Check environment variables.');
+  }
+
+  if (lineItems.length === 0) {
+    throw new Error('Cannot create checkout with empty cart');
+  }
+
+  // Format line items for Shopify Cart API
+  const cartLines = lineItems.map(item => ({
+    merchandiseId: item.variantId, // Use merchandiseId for Cart API
+    quantity: item.quantity,
+  }));
+
+  console.log('🔧 Formatted line items for cart:', cartLines);
+
+  const variables = {
+    input: {
+      lines: cartLines,
+    },
+  };
+
+  try {
+    const data = await shopifyFetch<CartCreateResponse>(CREATE_CART_MUTATION, variables);
+    
+    console.log('✅ Cart creation response:', data);
+
+    if (data.cartCreate.userErrors.length > 0) {
+      const errors = data.cartCreate.userErrors.map(error => error.message).join(', ');
+      throw new Error(`Cart creation failed: ${errors}`);
+    }
+
+    const checkoutUrl = data.cartCreate.cart.checkoutUrl;
+    console.log('🌐 Generated checkout URL:', checkoutUrl);
+    
+    return checkoutUrl;
+  } catch (error) {
+    console.error('❌ Cart creation error:', error);
+    throw new Error(`Failed to create checkout: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+// UPDATED: Generate checkout URL using the new createCheckout function
+export async function generateCheckoutUrl(lineItems: CartLineItem[]): Promise<string> {
+  return await createCheckout(lineItems);
+}
+
+// Legacy cart URL functions (keep for backup, but use createCheckout instead)
+export function generateCartUrl(lineItems: CartLineItem[]): string {
   const baseUrl = `https://${shopifyDomain}/cart/`;
   
-  // Extract numeric ID from Shopify variant ID
   const cartParams = lineItems.map(item => {
     const variantId = item.variantId.split('/').pop() || item.variantId;
     return `${variantId}:${item.quantity}`;
@@ -347,8 +486,7 @@ export function generateCheckoutUrl(lineItems: CartLineItem[]): string {
   return `${baseUrl}${cartParams}`;
 }
 
-// Alternative checkout URL format (more reliable)
-export function generateCheckoutUrlAlt(lineItems: CartLineItem[]): string {
+export function generateCartAddUrl(lineItems: CartLineItem[]): string {
   if (!shopifyDomain) {
     throw new Error('Shopify domain not configured');
   }
@@ -357,7 +495,6 @@ export function generateCheckoutUrlAlt(lineItems: CartLineItem[]): string {
   const params = new URLSearchParams();
   
   lineItems.forEach((item) => {
-    // Extract numeric ID from Shopify variant ID
     const variantId = item.variantId.split('/').pop() || item.variantId;
     params.append('id', variantId);
     params.append('quantity', item.quantity.toString());

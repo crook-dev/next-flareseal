@@ -26,64 +26,77 @@ export default function CartPageContent() {
     }).format(price);
   };
 
-  const handleCheckout = async () => {
-    console.log('🚨 CART PAGE CHECKOUT FUNCTION CALLED!');
-    
-    if (cart.items.length === 0) return;
+const handleCheckout = async () => {
+  console.log('🚨 CART PAGE CHECKOUT FUNCTION CALLED!');
   
-    setIsCheckingOut(true);
+  if (cart.items.length === 0) return;
+
+  setIsCheckingOut(true);
+  
+  try {
+    console.log('🛒 Starting checkout process...');
+    console.log('Cart items:', cart.items);
     
-    try {
-      console.log('🛒 Starting checkout process...');
-      console.log('Cart items:', cart.items);
-      
-      // Test environment variables
-      console.log('🔧 Environment check:');
-      console.log('SHOPIFY_STORE_DOMAIN:', process.env.SHOPIFY_STORE_DOMAIN);
-      console.log('SHOPIFY_STOREFRONT_ACCESS_TOKEN:', process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ? 'EXISTS' : 'MISSING');
-      
-      // Dynamic import to avoid module loading issues
-      console.log('📦 Loading Shopify module...');
-      const shopifyModule = await import('@/lib/shopify');
-      console.log('✅ Shopify module loaded:', Object.keys(shopifyModule));
-      
-      const { generateCheckoutUrl } = shopifyModule;
-      console.log('✅ generateCheckoutUrl function type:', typeof generateCheckoutUrl);
-      
-      // Convert cart items to Shopify checkout format
-      const lineItems = cart.items.map(item => {
-        console.log('🔍 Processing item:', {
-          variantId: item.variantId,
-          quantity: item.quantity,
-          title: item.productTitle
-        });
-        return {
-          variantId: item.variantId,
-          quantity: item.quantity,
-        };
+    // Test environment variables
+    console.log('🔧 Environment check:');
+    console.log('NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN:', process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || 'flareseal.myshopify.com');
+    console.log('NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN:', process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN ? 'EXISTS' : 'MISSING');
+    
+    // Dynamic import to avoid module loading issues
+    console.log('📦 Loading Shopify module...');
+    const shopifyModule = await import('@/lib/shopify');
+    console.log('✅ Shopify module loaded');
+    
+    const { createCheckout } = shopifyModule;
+    console.log('✅ createCheckout function type:', typeof createCheckout);
+    
+    // Convert cart items to Shopify checkout format
+    const lineItems = cart.items.map(item => {
+      console.log('🔍 Processing item:', {
+        variantId: item.variantId,
+        quantity: item.quantity,
+        title: item.productTitle
       });
-  
-      console.log('🔗 Final line items:', lineItems);
-  
-      // Generate checkout URL and redirect
-      console.log('🌐 Calling generateCheckoutUrl...');
-      const checkoutUrl = generateCheckoutUrl(lineItems);
-      console.log('✅ Generated checkout URL:', checkoutUrl);
-      
-      console.log('🚀 Attempting redirect...');
-      window.location.href = checkoutUrl;
-      
-    } catch (error) {
-      console.error('❌ DETAILED CHECKOUT ERROR:');
-      console.error('Error message:', error?.message);
-      console.error('Error name:', error?.name);
-      console.error('Error stack:', error?.stack);
-      console.error('Full error object:', error);
-      
-      alert(`Checkout failed: ${error?.message || 'Unknown error'}`);
-      setIsCheckingOut(false);
+      return {
+        variantId: item.variantId, // Use the full Shopify variant ID
+        quantity: item.quantity,
+      };
+    });
+
+    console.log('🔗 Final line items:', lineItems);
+
+    // Create checkout and get URL
+    console.log('🌐 Creating Shopify checkout session...');
+    const checkoutUrl = await createCheckout(lineItems);
+    console.log('✅ Generated checkout URL:', checkoutUrl);
+    
+    console.log('🚀 Redirecting to checkout...');
+    window.location.href = checkoutUrl;
+    
+  } catch (error) {
+    console.error('❌ DETAILED CHECKOUT ERROR:');
+    console.error('Error message:', error?.message);
+    console.error('Error name:', error?.name);
+    console.error('Error stack:', error?.stack);
+    console.error('Full error object:', error);
+    
+    // More user-friendly error messages
+    let errorMessage = 'Something went wrong during checkout. ';
+    
+    if (error?.message?.includes('configuration missing')) {
+      errorMessage += 'Please contact support - store configuration issue.';
+    } else if (error?.message?.includes('empty cart')) {
+      errorMessage += 'Your cart appears to be empty.';
+    } else if (error?.message?.includes('Checkout creation failed')) {
+      errorMessage += error.message.replace('Checkout creation failed: ', '');
+    } else {
+      errorMessage += 'Please try again or contact support if the problem persists.';
     }
-  };
+    
+    alert(errorMessage);
+    setIsCheckingOut(false);
+  }
+};
 
   const handleClearCart = () => {
     if (confirm('Are you sure you want to clear your entire cart?')) {

@@ -222,12 +222,11 @@ p {
 }
 
 h1 {
-  @apply text-4xl font-bold leading-none text-primary;
+  @apply text-4xl font-bold leading-none;
   font-family: "Montserrat", sans-serif;
 }
 
 h2 {
-  @apply text-3xl;
   @apply font-bold;
   @apply leading-none;
   font-family: "Montserrat", sans-serif;

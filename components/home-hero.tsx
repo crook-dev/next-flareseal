@@ -6,7 +6,7 @@ export default function HomeHero() {
     <section style={{ backgroundImage: "url('/images/home-hero-768.jpg')" }} className="hero hero-image py-16 bg-right bg-no-repeat bg-cover">
     <div className="flex flex-wrap items-center container mx-auto p-2">
       <div className="w-full md:w-1/2">
-        <h1 className="text-white font-semibold text-2xl">
+        <h1 className="text-white font-semibold text-2xl mb-1">
           FlareSeal&reg; Delivers a Confident, Leak-free Flare!
         </h1>
         <p className="text-white text-xl italic font-semibold mt-8 md:mt-0">

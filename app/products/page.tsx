@@ -8,6 +8,34 @@ export const metadata: Metadata = {
   description: 'Browse our complete collection of mini-split systems and HVAC products.',
 };
 
+// SEO Content by Collection Handle
+const collectionSEOContent = {
+  'mini-split-pack': {
+    title: 'Mini-Split Packs',
+    subtitle: 'Eliminate flare leaks and ensure a secure HVAC installation',
+    description: 'Each pack is designed for the most common mini-split system line set sizes, making it easy to match your setup. FlareSeal® gaskets provide a long-term, leak-free seal by addressing the #1 cause of flare connection failures—micro-imperfections on the sealing surface.',
+    benefits: [
+      'Compatible with all standard SAE flare fittings',
+      'Ideal for HVAC contractors and DIY mini-split installs',
+      'Prevents costly refrigerant leaks and improves system efficiency',
+      'Save time—no need to reflare or overtighten fittings'
+    ],
+    callout: 'Whether you\'re installing a new system or repairing an existing one, these packs offer reliable performance, reduced call-backs, and peace of mind.'
+  },
+  'mini-split-kit': {
+    title: 'Single Size Packs',
+    subtitle: 'Stop refrigerant leaks and simplify HVAC service',
+    description: 'Perfect for targeted repairs or volume installations, these value packs are engineered to provide a tight, leak-free seal on any SAE flare connection. Use them on mini-splits, heat pumps, refrigeration systems, and more.',
+    benefits: [
+      'Leak-free performance for new installs or weeping joints',
+      'Sized for common line sets: 1/4", 3/8", 1/2", 5/8", and 3/4"',
+      'Durable gasket resists pressure cycling, vibration, and corrosion',
+      'A must-have for HVAC pros, service trucks, and inventory stock'
+    ],
+    callout: 'Buy only what you need—or stock up and save. These 10-packs are your best defense against persistent flare leaks.'
+  }
+};
+
 export default async function ProductsPage() {
   try {
     // Fetch all collections with their products at build time
@@ -34,34 +62,36 @@ export default async function ProductsPage() {
     const nonEmptyCollections = collections.filter(collection => collection.products.length > 0);
 
     const reorderedCollections = nonEmptyCollections.length >= 2 
-  ? [
-      nonEmptyCollections[1], // Second collection becomes first
-      nonEmptyCollections[0], // First collection becomes second
-      ...nonEmptyCollections.slice(2) // Keep any remaining collections in their original order
-    ]
-  : nonEmptyCollections; // If less than 2 collections, keep original order
+      ? [
+          nonEmptyCollections[1], // Second collection becomes first
+          nonEmptyCollections[0], // First collection becomes second
+          ...nonEmptyCollections.slice(2) // Keep any remaining collections in their original order
+        ]
+      : nonEmptyCollections; // If less than 2 collections, keep original order
 
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header */}
-          <div className="mb-12 text-center pb-12">
-            <h1 className="mb-4">Leak-Free Connections by FlareSeal®</h1>
-            <p className="text-lg mx-auto">
-            The seal protects against the primary area of flare leaks… on the sealing surface. 
-            FlareSeal® fits all common SAE flare connections for our industry. It not only provides 
-            a long-term leak-free connection on new installations or products, but it also can be used 
-            to stop weeping connections in existing systems.
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Compact Header */}
+          <div className="py-12 text-center border-b border-gray-200 bg-white mb-8">
+            <h1 className="text-4xl font-bold text-primary mb-4">
+              Leak-Free Connections by FlareSeal®
+            </h1>
+            <p className="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              The seal protects against the primary area of flare leaks on the sealing surface. 
+              FlareSeal® fits all common SAE flare connections and provides long-term leak-free 
+              connections for both new installations and existing system repairs.
             </p>
           </div>
           
           {/* Collections Sections */}
           {reorderedCollections.length > 0 ? (
-            <div className="space-y-16">
+            <div className="space-y-16 pb-16">
               {reorderedCollections.map((collection) => (
                 <CollectionSection 
                   key={collection.id} 
-                  collection={collection} 
+                  collection={collection}
+                  seoContent={collectionSEOContent[collection.handle as keyof typeof collectionSEOContent]}
                 />
               ))}
             </div>

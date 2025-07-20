@@ -35,7 +35,7 @@ export default function Home() {
         <div className="container">
           <div className="flex items-center flex-wrap">
             <div className="w-full lg:w-1/2">
-              <h2 className="font-normal">
+              <h2 className="text-primary text-3xl">
                 The HVAC/R Industry Changing Multi-Ring-Seal By FlareSeal&reg;
               </h2>
               <p>
@@ -90,7 +90,7 @@ export default function Home() {
           {/* Applications Section */}
           <div className="flex pt-16">
             <div className="w-full">
-              <h2 className="text-center mb-8 font-normal">
+              <h2 className="text-center mb-8 text-primary text-3xl">
                 Endless Applications for Leak-Free Flare Connections!
               </h2>
               <div className="flex flex-wrap justify-around">
@@ -337,7 +337,7 @@ export default function Home() {
               />
             </div>
             <div className="w-full md:w-1/2">
-              <h2 className="font-normal">
+              <h2 className="text-primary text-3xl">
                 The FlareSeal&reg; was Developed Specifically for the HVAC/R
                 Industry
               </h2>
@@ -370,7 +370,7 @@ export default function Home() {
               />
             </div>
             <div className="w-full md:w-1/2">
-              <h2 className="text-white">Easy 3 Step Install</h2>
+              <h2 className="text-white text-3xl">Easy 3 Step Install</h2>
               <ul>
                 <li className="mb-4 text-white">
                   <span className="numberCircle">1</span>Clean the male flare fitting
@@ -393,7 +393,7 @@ export default function Home() {
         <div className="container">
           <div className="flex flex-wrap items-center">
             <div className="w-full lg:w-1/2">
-              <h2 className="text-primary">
+              <h2 className="text-primary text-3xl">
                 The FlareSeal&reg; is an engineered copper gasket with a special
                 multi-ring design on the flare surface.
               </h2>
