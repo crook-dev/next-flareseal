@@ -12,11 +12,22 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
+type Article = {
+  slug: string
+  title: string
+  description: string
+  category?: string
+  tags?: string[]
+  date: string
+  readingTime?: string
+  content: string
+}
+
 function getArticleBySlug(slug: string) {
   return STATIC_KNOWLEDGE_BASE_ARTICLES.find((article) => article.slug === slug)
 }
 
-function getRelatedArticles(currentArticle: any, limit = 3) {
+function getRelatedArticles(currentArticle: Article, limit = 3) {
   return STATIC_KNOWLEDGE_BASE_ARTICLES
     .filter(article => 
       article.slug !== currentArticle.slug && 

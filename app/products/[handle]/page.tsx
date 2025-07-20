@@ -4,18 +4,18 @@ import ProductDetail from '@/components/products/product-component';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { FormattedProduct, FormattedCollection } from '@/types/shopify';
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     handle: string;
-  };
+  }>;
 }
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const rawProduct = await getProductByHandle(params.handle);
-  
+  const { handle } = await params;
+  const rawProduct = await getProductByHandle(handle);
+
   if (!rawProduct) {
     return {
       title: 'Product Not Found | FlareSeal',
@@ -57,8 +57,9 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const rawProduct = await getProductByHandle(params.handle);
-  
+ const { handle } = await params;
+  const rawProduct = await getProductByHandle(handle);
+
   if (!rawProduct) {
     notFound();
   }
@@ -69,7 +70,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const rawCollections = await getAllCollections();
   
   // Format collections data
-  const collections: FormattedCollection[] = rawCollections.map(collection => ({
+  const collections = rawCollections.map(collection => ({
     id: collection.id,
     title: collection.title,
     handle: collection.handle,

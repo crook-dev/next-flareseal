@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@use "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));

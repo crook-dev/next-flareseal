@@ -10,14 +10,13 @@ import {
   X, 
   ArrowLeft, 
   CreditCard,
-  Truck,
-  Shield,
-  Info
+  AlertTriangle
 } from 'lucide-react';
 
 export default function CartPageContent() {
   const { cart, removeItem, updateQuantity, clearCart, getCartTotal } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const formatPrice = (price: number, currencyCode: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
@@ -26,77 +25,59 @@ export default function CartPageContent() {
     }).format(price);
   };
 
-const handleCheckout = async () => {
-  console.log('🚨 CART PAGE CHECKOUT FUNCTION CALLED!');
-  
-  if (cart.items.length === 0) return;
-
-  setIsCheckingOut(true);
-  
-  try {
-    console.log('🛒 Starting checkout process...');
-    console.log('Cart items:', cart.items);
+  const handleCheckout = async () => {
+    if (cart.items.length === 0) return;
     
-    // Test environment variables
-    console.log('🔧 Environment check:');
-    console.log('NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN:', process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || 'flareseal.myshopify.com');
-    console.log('NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN:', process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN ? 'EXISTS' : 'MISSING');
+    setIsCheckingOut(true);
+    setCheckoutError(null); // Clear any previous errors
     
-    // Dynamic import to avoid module loading issues
-    console.log('📦 Loading Shopify module...');
-    const shopifyModule = await import('@/lib/shopify');
-    console.log('✅ Shopify module loaded');
-    
-    const { createCheckout } = shopifyModule;
-    console.log('✅ createCheckout function type:', typeof createCheckout);
-    
-    // Convert cart items to Shopify checkout format
-    const lineItems = cart.items.map(item => {
-      console.log('🔍 Processing item:', {
+    try {
+      const shopifyModule = await import('@/lib/shopify');
+      const { createCheckout } = shopifyModule;
+      
+      // Convert cart items to Shopify checkout format
+      const lineItems = cart.items.map(item => ({
         variantId: item.variantId,
         quantity: item.quantity,
-        title: item.productTitle
-      });
-      return {
-        variantId: item.variantId, // Use the full Shopify variant ID
-        quantity: item.quantity,
-      };
-    });
+      }));
 
-    console.log('🔗 Final line items:', lineItems);
-
-    // Create checkout and get URL
-    console.log('🌐 Creating Shopify checkout session...');
-    const checkoutUrl = await createCheckout(lineItems);
-    console.log('✅ Generated checkout URL:', checkoutUrl);
-    
-    console.log('🚀 Redirecting to checkout...');
-    window.location.href = checkoutUrl;
-    
-  } catch (error) {
-    console.error('❌ DETAILED CHECKOUT ERROR:');
-    console.error('Error message:', error?.message);
-    console.error('Error name:', error?.name);
-    console.error('Error stack:', error?.stack);
-    console.error('Full error object:', error);
-    
-    // More user-friendly error messages
-    let errorMessage = 'Something went wrong during checkout. ';
-    
-    if (error?.message?.includes('configuration missing')) {
-      errorMessage += 'Please contact support - store configuration issue.';
-    } else if (error?.message?.includes('empty cart')) {
-      errorMessage += 'Your cart appears to be empty.';
-    } else if (error?.message?.includes('Checkout creation failed')) {
-      errorMessage += error.message.replace('Checkout creation failed: ', '');
-    } else {
-      errorMessage += 'Please try again or contact support if the problem persists.';
+      const checkoutUrl = await createCheckout(lineItems);
+      
+      // Small delay to show loading state, then redirect
+      setTimeout(() => {
+        window.location.href = checkoutUrl;
+      }, 500);
+      
+    } catch (error) {
+      console.error('Checkout error:', error);
+      
+      // Determine user-friendly error message
+      let errorMessage = 'Unable to proceed to checkout';
+      let errorDetails = '';
+      
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      
+      if (errorMsg.includes('configuration missing')) {
+        errorMessage = 'Store temporarily unavailable';
+        errorDetails = 'We\'re experiencing technical difficulties. Please try again in a few minutes.';
+      } else if (errorMsg.includes('empty cart')) {
+        errorMessage = 'Cart is empty';
+        errorDetails = 'Please add items to your cart before checking out.';
+      } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
+        errorMessage = 'Connection issue';
+        errorDetails = 'Please check your internet connection and try again.';
+      } else if (errorMsg.includes('Checkout creation failed')) {
+        errorMessage = 'Checkout unavailable';
+        errorDetails = errorMsg.replace('Checkout creation failed: ', '') || 'Please try again.';
+      } else {
+        errorMessage = 'Something went wrong';
+        errorDetails = 'Please try again. If the problem persists, try refreshing the page.';
+      }
+      
+      setCheckoutError(`${errorMessage}. ${errorDetails}`);
+      setIsCheckingOut(false);
     }
-    
-    alert(errorMessage);
-    setIsCheckingOut(false);
-  }
-};
+  };
 
   const handleClearCart = () => {
     if (confirm('Are you sure you want to clear your entire cart?')) {
@@ -291,6 +272,24 @@ const handleCheckout = async () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
               
+              {/* Error Alert - only show if there's an error */}
+              {checkoutError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start space-x-3 mb-6">
+                  <div className="flex-shrink-0">
+                    <AlertTriangle className="h-5 w-5 text-red-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-red-800">{checkoutError}</p>
+                    <button
+                      onClick={() => setCheckoutError(null)}
+                      className="mt-2 text-xs text-red-600 hover:text-red-500 underline"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              )}
+              
               {/* Summary Items */}
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
@@ -323,15 +322,42 @@ const handleCheckout = async () => {
               {/* Checkout Button */}
               <button
                 onClick={handleCheckout}
-                disabled={isCheckingOut || cart.items.length === 0}
-                className="w-full flex items-center justify-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mb-4"
+                disabled={cart.items.length === 0 || isCheckingOut}
+                className={`
+                  w-full flex items-center justify-center px-6 py-3 font-medium rounded-md transition-all duration-200 mb-4
+                  ${cart.items.length === 0 
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                    : isCheckingOut
+                      ? 'bg-indigo-400 text-white cursor-wait'
+                      : 'bg-indigo-600 hover:bg-indigo-700 text-white hover:shadow-lg'
+                  }
+                `}
               >
-                <CreditCard size={20} className="mr-2" />
-                {isCheckingOut ? 'Processing...' : 'Proceed to Checkout'}
+                {isCheckingOut ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Preparing checkout...</span>
+                  </div>
+                ) : (
+                  <>
+                    <CreditCard size={20} className="mr-2" />
+                    Proceed to Checkout ({cart.totalItems} {cart.totalItems === 1 ? 'item' : 'items'})
+                  </>
+                )}
               </button>
 
+              {/* Optional: Retry button when there's an error */}
+              {checkoutError && !isCheckingOut && (
+                <button
+                  onClick={handleCheckout}
+                  className="w-full py-2 px-4 text-indigo-600 hover:text-indigo-700 font-medium text-sm border border-indigo-200 hover:border-indigo-300 rounded-lg transition-colors mb-4"
+                >
+                  Try Again
+                </button>
+              )}
+
               {/* Trust Signals */}
-              <div className="space-y-3 text-sm text-gray-600">
+              {/* <div className="space-y-3 text-sm text-gray-600">
                 <div className="flex items-center">
                   <Shield size={16} className="mr-2 text-green-500" />
                   Secure checkout
@@ -344,27 +370,7 @@ const handleCheckout = async () => {
                   <Info size={16} className="mr-2 text-gray-400" />
                   30-day return policy
                 </div>
-              </div>
-
-              {/* Promo Code */}
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="space-y-2">
-                  <label htmlFor="promo" className="block text-sm font-medium text-gray-700">
-                    Promo Code
-                  </label>
-                  <div className="flex space-x-2">
-                    <input
-                      type="text"
-                      id="promo"
-                      placeholder="Enter code"
-                      className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                    <button className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition-colors">
-                      Apply
-                    </button>
-                  </div>
-                </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

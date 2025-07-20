@@ -53,7 +53,7 @@ export default function Home() {
                   Lowers cost to operate systems due to leak reductions.
                 </li>
                 <li className="mb-2">
-                  Sales advantage for OEM's over others not using FlareSeal&reg;.
+                  Sales advantage for OEM&apos;s over others not using FlareSeal&reg;.
                 </li>
                 <li className="mb-2">
                   Protection against weeping on new and existing equipment.

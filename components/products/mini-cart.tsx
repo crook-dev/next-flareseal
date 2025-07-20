@@ -46,8 +46,8 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
         quantity: item.quantity,
       }));  
       const { generateCheckoutUrl } = await import('@/lib/shopify');
-      const checkoutUrl = generateCheckoutUrl(lineItems);
-    window.location.href = checkoutUrl;
+      const checkoutUrl = await generateCheckoutUrl(lineItems);
+      window.location.href = checkoutUrl;
       
     } catch (error) {
       console.error('Checkout error:', error);

@@ -92,11 +92,11 @@ export default function PrivacyPolicy() {
       <li>
         We use Shopify to power our online store. You can read more about how
         Shopify uses your Personal Information here:
-        <a
+        <Link
           href="https://www.shopify.com/legal/privacy"
           target="_blank"
           rel="noopener noreferrer"
-          >https://www.shopify.com/legal/privacy</a
+          >https://www.shopify.com/legal/privacy</Link
         >.
       </li>
       <li>
@@ -117,17 +117,17 @@ export default function PrivacyPolicy() {
         We use Google Analytics to help us understand how our customers use
         the Site. You can read more about how Google uses your Personal
         Information here:
-        <a
+        <Link
           href="https://policies.google.com/privacy?hl=en"
           target="_blank"
           rel="noopener noreferrer"
-          >https://policies.google.com/privacy?hl=en</a
+          >https://policies.google.com/privacy?hl=en</Link
         >.You can also opt-out of Google Analytics here:
-        <a
+        <Link
           href="https://tools.google.com/dlpage/gaoptout"
           target="_blank"
           rel="noopener noreferrer"
-          >https://tools.google.com/dlpage/gaoptout</a
+          >https://tools.google.com/dlpage/gaoptout</Link
         >.
       </li>
       <li>
@@ -141,52 +141,52 @@ export default function PrivacyPolicy() {
     </ul>
     <p>
       For more information about how targeted advertising works, you can visit
-      the Network Advertising Initiative’s (“NAI”) educational page at
-      <a
+      the Network Advertising Initiative&apos;s (“NAI”) educational page at
+      <Link
         href="http://www.networkadvertising.org/understanding-online-advertising/how-does-it-work"
         target="_blank"
         rel="noopener noreferrer"
-        >http://www.networkadvertising.org/understanding-online-advertising/how-does-it-work</a
+        >http://www.networkadvertising.org/understanding-online-advertising/how-does-it-work</Link
       >.
     </p>
     <p>You can opt out of targeted advertising by:</p>
       <ul className="list-disc list-inside my-4">
       <li>
         <i>FACEBOOK - </i>
-        <a
+        <Link
           href="https://www.facebook.com/settings/?tab=ads"
           target="_blank"
           rel="noopener noreferrer"
-          >https://www.facebook.com/settings/?tab=ads</a
+          >https://www.facebook.com/settings/?tab=ads</Link
         >
       </li>
       <li>
         <i>GOOGLE - </i>
-        <a
+        <Link
           href="https://www.google.com/settings/ads/anonymous"
           target="_blank"
           rel="noopener noreferrer"
-          >https://www.google.com/settings/ads/anonymous</a
+          >https://www.google.com/settings/ads/anonymous</Link
         >
       </li>
       <li>
         <i>BING - </i>
-        <a
+        <Link
           href="https://advertise.bingads.microsoft.com/en-us/resources/policies/personalized-ads"
           target="_blank"
           rel="noopener noreferrer"
-          >https://advertise.bingads.microsoft.com/en-us/resources/policies/personalized-ads</a
-        ><i>]</i>
+            >https://advertise.bingads.microsoft.com/en-us/resources/policies/personalized-ads
+          </Link>
       </li>
     </ul>
     <p>
       Additionally, you can opt out of some of these services by visiting the
-      Digital Advertising Alliance’s opt-out portal at:
-      <a
+      Digital Advertising Alliance&apos;s opt-out portal at:
+      <Link
         href="http://optout.aboutads.info/"
         target="_blank"
         rel="noopener noreferrer"
-        >http://optout.aboutads.info/</a
+        >http://optout.aboutads.info/</Link
       >.
     </p>
     <h2 className="text-primary text-2xl">Using Personal Information</h2>
@@ -233,15 +233,15 @@ export default function PrivacyPolicy() {
     </ul>
     <h2 className="text-primary text-2xl">Cookies</h2>
     <p>
-      A cookie is a small amount of information that’s downloaded to your
+      A cookie is a small amount of information that&apos;s downloaded to your
       computer or device when you visit our Site. We use a number of different
       cookies, including functional, performance, advertising, and social
       media or content cookies. Cookies make your browsing experience better
       by allowing the website to remember your actions and preferences (such
-      as login and region selection). This means you don’t have to re-enter
+      as login and region selection). This means you don&apos;t have to re-enter
       this information each time you return to the site or browse from one
       page to another. Cookies also provide information on how people use the
-      website, for instance whether it’s their first time visiting or if they
+      website, for instance whether it&apos;s their first time visiting or if they
       are a frequent visitor.
     </p>
     <p>
@@ -301,7 +301,7 @@ export default function PrivacyPolicy() {
         </tr>
       </tbody>
     </table>
-    <h3 class="text-primary text-xl">Reporting and Analytics</h3>
+    <h3 className="text-primary text-xl">Reporting and Analytics</h3>
     <table className="mb-4">
       <tbody>
         <tr>
@@ -352,7 +352,7 @@ export default function PrivacyPolicy() {
     </table>
     <p>
       The length of time that a cookie remains on your computer or mobile
-      device depends on whether it is a “persistent” or “session” cookie.
+      device depends on whether it is a &quot;persistent&quot; or &quot;session&quot; cookie.
       Session cookies last until you stop browsing and persistent cookies last
       until they expire or are deleted. Most of the cookies we use are
       persistent and will expire between 30 minutes and two years from the
@@ -366,7 +366,7 @@ export default function PrivacyPolicy() {
     <p>
       Most browsers automatically accept cookies, but you can choose whether
       or not to accept cookies through your browser controls, often found in
-      your browser’s “Tools” or “Preferences” menu.
+      your browser&apos;s &quot;Tools&quot; or &quot;Preferences&quot; menu.
     </p>
     <p>
       Additionally, please note that blocking cookies may not completely
