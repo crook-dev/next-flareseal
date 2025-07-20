@@ -96,13 +96,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.3,
     },
   ]
-
   const [productPages, kbPages] = await Promise.all([
     getProductPages(),
     Promise.resolve(getKnowledgeBasePages())
   ])
-
-  console.log(`Generated sitemap with ${staticPages.length + productPages.length + kbPages.length} URLs`)
-
   return [...staticPages, ...kbPages, ...productPages]
 }

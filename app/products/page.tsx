@@ -4,23 +4,14 @@ import { FormattedCollection } from '@/types/shopify';
 import { Metadata } from 'next';
 
 
-export async function generateMetadata(): Promise<Metadata> {
-  console.log('🔍 Starting metadata generation...');
-  
-  try {
-    console.log('📡 Fetching collections from Shopify...');
-    
+export async function generateMetadata(): Promise<Metadata> { 
+  try {    
     // Fetch collections to get actual product count
-    const rawCollections = await getAllCollections();
-    console.log(`✅ Successfully fetched ${rawCollections.length} collections`);
-    
+    const rawCollections = await getAllCollections();  
     const totalProducts = rawCollections.reduce((total, collection) => {
-      console.log(`📦 Collection "${collection.title}" has ${collection.products.length} products`);
       return total + collection.products.length;
     }, 0);
     
-    console.log(`🎯 Total products: ${totalProducts}`);
-
     const metadata = {
       title: 'HVAC Flare Connection Products | FlareSeal® Mini-Split & Refrigeration Systems',
       description: `Shop ${totalProducts}+ FlareSeal® leak-free flare connection products for HVAC mini-splits and refrigeration systems. Available in all standard SAE sizes: 1/4", 3/8", 1/2", 5/8", 3/4". Prevent refrigerant leaks permanently.`,
@@ -115,19 +106,16 @@ export async function generateMetadata(): Promise<Metadata> {
         ])
       },
     };
-
-    console.log('✅ Metadata generated successfully');
     return metadata;
     
   } catch (error) {
-    console.error('❌ Error generating metadata:', error);
-    console.error('📊 Error details:', {
+    console.error('Error generating metadata:', error);
+    console.error('Error details:', {
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined
     });
     
     // Fallback metadata if API fails
-    console.log('🔄 Using fallback metadata');
     return {
       title: 'HVAC Flare Connection Products | FlareSeal® Mini-Split & Refrigeration Systems',
       description: 'Shop FlareSeal® leak-free flare connection products for HVAC mini-splits and refrigeration systems. Available in all standard SAE sizes. Prevent refrigerant leaks permanently.',

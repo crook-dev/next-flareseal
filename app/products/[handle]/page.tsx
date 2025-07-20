@@ -13,8 +13,6 @@ interface ProductPageProps {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  console.log('🔍 Generating product metadata...');
-  
   try {
     const { handle } = await params;
     const rawProduct = await getProductByHandle(handle);
