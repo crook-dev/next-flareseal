@@ -186,12 +186,7 @@ export default async function KnowledgeBaseArticlePage({ params }: Props) {
               FlareSeal® products provide the reliable, leak-free connections your HVAC systems need.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button asChild>
-                <Link href="/shop">Shop FlareSeal® Products</Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link href="/contact">Get Technical Support</Link>
-              </Button>
+                <Link className="btn btn__primary" href="/shop">Shop FlareSeal® Products</Link>
             </div>
           </div>
 
