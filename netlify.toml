@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/shop"
+  to = "/products"
+  status = 301
+  force = true
