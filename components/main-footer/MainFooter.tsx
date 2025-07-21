@@ -28,7 +28,7 @@ export default function MainFooter() {
 
           {/* Contact Information */}
           <div className="w-full md:w-auto flex flex-col mt-4 md:mt-0 space-y-2">
-            <h4 className="text-primary font-bold mb-3 text-lg">Contact Us</h4>
+            <h3 className="text-primary font-bold mb-3 text-lg">Contact Us</h3>
             <address className="text-primary not-italic leading-relaxed">
               FlareSeal&copy;, LLC<br />
               6065 Parkway North Drive,<br />
@@ -53,7 +53,7 @@ export default function MainFooter() {
 
           {/* Navigation Links */}
           <div className="w-full md:w-auto flex flex-col mt-4 md:mt-0 space-y-3">
-            <h4 className="text-primary font-bold mb-3 text-lg">Links</h4>
+            <h3 className="text-primary font-bold mb-3 text-lg">Links</h3>
             <nav className="space-y-3">
               <Link 
                 href="/" 
@@ -84,9 +84,9 @@ export default function MainFooter() {
 
           {/* Social Media */}
           <div className="w-full md:w-auto">
-            <h4 className="text-primary font-bold mb-3 text-lg">Follow Us</h4>
+            <h3 className="text-primary font-bold mb-3 text-lg">Follow Us</h3>
             <div className="flex justify-center md:justify-start">
-              <Link href="https://www.facebook.com/flareseal">
+              <Link href="https://www.facebook.com/flareseal" aria-label="Facebook">
                 <Facebook />
               </Link>
             </div>

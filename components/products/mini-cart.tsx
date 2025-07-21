@@ -7,13 +7,13 @@ import { X, Plus, Minus, ShoppingBag, CreditCard } from 'lucide-react';
 interface MiniCartProps {
   isOpen: boolean;
   onClose: () => void;
+  id: string;
 }
 
-export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
+export default function MiniCart({ isOpen, onClose, id }: MiniCartProps & { id?: string }) {
   const { cart, removeItem, updateQuantity, getCartTotal } = useCart();
   const miniCartRef = useRef<HTMLDivElement>(null);
 
-  // Close on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (miniCartRef.current && !miniCartRef.current.contains(event.target as Node)) {
@@ -27,6 +27,45 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+      if (e.key === 'Tab') {
+        const focusableEls = miniCartRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusableEls || focusableEls.length === 0) return;
+        const first = focusableEls[0] as HTMLElement;
+        const last = focusableEls[focusableEls.length - 1] as HTMLElement;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    setTimeout(() => {
+      const focusableEls = miniCartRef.current?.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusableEls && focusableEls.length > 0) {
+        (focusableEls[0] as HTMLElement).focus();
+      }
+    }, 0);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
 
@@ -59,17 +98,18 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
 
   return (
     <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 bg-black opacity-75 z-40" onClick={onClose} />
-      
-      {/* Mini Cart */}
+      <div className="fixed inset-0 bg-black opacity-75 z-40" onClick={onClose} />      
       <div
         ref={miniCartRef}
+        id={id}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mini-cart-title"
+        tabIndex={-1}
         className="fixed top-16 right-4 w-96 max-w-sm bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-[80vh] flex flex-col animate-slide-in-right"
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 id="mini-cart-title" className="text-lg font-semibold text-gray-900">
             Shopping Cart ({cart.totalItems})
           </h3>
           <button
@@ -79,8 +119,6 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
             <X size={20} className="text-gray-500" />
           </button>
         </div>
-
-        {/* Cart Items */}
         <div className="flex-1 overflow-y-auto">
           {cart.items.length === 0 ? (
             <div className="p-6 text-center">
@@ -97,7 +135,6 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
             <div className="p-4 space-y-4">
               {cart.items.map((item) => (
                 <div key={item.variantId} className="flex items-start space-x-3">
-                  {/* Product Image */}
                   <div className="flex-shrink-0 w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
                     {item.image ? (
                       <Image
@@ -114,7 +151,6 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
                     )}
                   </div>
 
-                  {/* Product Info */}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium text-gray-900 truncate">
                       {item.productTitle}
@@ -125,7 +161,6 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
                       </p>
                     )}
                     
-                    {/* Price */}
                     <div className="flex items-center space-x-2 mt-1">
                       <span className="text-sm font-medium text-gray-900">
                         {formatPrice(item.price, item.currencyCode)}
@@ -137,7 +172,6 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
                       )}
                     </div>
 
-                    {/* Quantity Controls */}
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center space-x-1">
                         <button
@@ -158,7 +192,6 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
                         </button>
                       </div>
 
-                      {/* Remove Button */}
                       <button
                         onClick={() => removeItem(item.variantId)}
                         className="text-xs text-red-600 hover:text-red-800 font-medium"
@@ -173,10 +206,8 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
           )}
         </div>
 
-        {/* Footer */}
         {cart.items.length > 0 && (
           <div className="border-t border-gray-200 p-4 space-y-4">
-            {/* Subtotal */}
             <div className="flex justify-between items-center">
               <span className="text-base font-medium text-gray-900">Subtotal</span>
               <span className="text-lg font-semibold text-gray-900">
@@ -184,7 +215,6 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
               </span>
             </div>
 
-            {/* Action Buttons */}
             <div className="space-y-2">
               <a
                 href="/cart"
@@ -203,7 +233,6 @@ export default function MiniCart({ isOpen, onClose }: MiniCartProps) {
               </button>
             </div>
 
-            {/* Shipping Info */}
             <p className="text-xs text-gray-500 text-center">
               Shipping calculated at checkout
             </p>

@@ -13,19 +13,27 @@ export default function CartIcon() {
     <>
       <button
         onClick={() => setIsMiniCartOpen(!isMiniCartOpen)}
+        aria-label="Open cart"
+        aria-expanded={isMiniCartOpen}
+        aria-controls="mini-cart"
+        name="cart-icon"
         className="relative p-2 text-gray-700 hover:text-black transition-colors duration-200 group"
       >
         <ShoppingCart size={20} className="group-hover:scale-110 transition-transform duration-200" />
         {cartItemCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium animate-pulse">
+          <span
+            className="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium animate-pulse"
+            aria-live="polite"
+          >
             {cartItemCount > 99 ? '99+' : cartItemCount}
           </span>
         )}
       </button>
 
-      <MiniCart 
-        isOpen={isMiniCartOpen} 
-        onClose={() => setIsMiniCartOpen(false)} 
+      <MiniCart
+        isOpen={isMiniCartOpen}
+        onClose={() => setIsMiniCartOpen(false)}
+        id="mini-cart"
       />
     </>
   );
