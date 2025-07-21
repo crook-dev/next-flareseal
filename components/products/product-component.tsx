@@ -27,6 +27,10 @@ export default function ProductDetail({
   const [showSuccess, setShowSuccess] = useState(false); 
 
   useEffect(() => {
+    console.log('🔍 Product data:', product);
+    console.log('🔍 Product title:', product.title);
+    console.log('🔍 Product variants:', product.variants);
+    console.log('🔍 About to call trackProductView');
     trackProductView(product);
   }, [product]);
 

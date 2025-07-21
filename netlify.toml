@@ -3,3 +3,9 @@
   to = "/products"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/shop/*"
+  to = "/products/:splat"
+  status = 301
+  force = true
