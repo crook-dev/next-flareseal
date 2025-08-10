@@ -302,3 +302,20 @@ Your choice of connection methods isn't just about today's installation—it's a
 Choose wisely. Your customers and your bottom line depend on it.
 
 [Upgrade beyond factory flares with FlareSeal® professional leak prevention technology.](/shop)
+
+## Calculate Your Quality Investment ROI
+
+Now that you understand the economics of quality installation, see exactly how much money you could save by eliminating factory flare failures. Our free ROI calculator will show you:
+
+- **Annual cost of preventable callbacks** based on your installation volume
+- **Potential savings** from using professional installation methods
+- **Return on investment** for your specific operation
+- **Hidden costs** that most contractors don't consider
+
+**[Calculate Your ROI Now →](/flareseal-roi-calculator)**
+
+*See the real numbers for your business and discover why quality installation is the smartest investment you can make in your company's future.*
+
+---
+
+*Ready to upgrade beyond factory flares? [Shop FlareSeal products](/products) and start building your reputation for quality today.*

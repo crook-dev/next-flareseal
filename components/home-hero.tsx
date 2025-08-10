@@ -16,9 +16,17 @@ export default function HomeHero() {
           The Flare Seal prevents and eliminates refrigerant leaks in
           Refrigeration and HVAC systems.
         </p>
-        <Link href="/shop" className="btn btn__white px-4">
-          Shop Now &rarr;
-        </Link>
+        <div className="flex flex-col gap-4 mb-8">
+          <Link href="/products" className="btn btn__white px-6 py-3 text-center">
+            Shop Now &rarr;
+          </Link>
+          <Link 
+            href="/flareseal-roi-calculator" 
+            className="btn btn__white"
+          >
+            See What Leaks Are Really Costing You - Free Calculator
+          </Link>
+        </div>
       </div>
       <div className="w-full md:w-1/2 mt-6">
         <Image

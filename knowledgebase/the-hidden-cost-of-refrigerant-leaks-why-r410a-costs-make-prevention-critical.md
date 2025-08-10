@@ -135,3 +135,20 @@ FlareSeal® multi-ring seals provide an insurance policy against the primary sou
 For the cost of a few pounds of refrigerant, you can protect an entire system for its lifetime. In today's high-cost refrigerant environment, that's not just good practice—it's good business.
 
 [Ready to stop throwing money away on refrigerant leaks? Explore FlareSeal® products in our store.](/shop)
+
+## Calculate Your Leak Prevention Savings
+
+Now that you understand the true cost of refrigerant leaks, see exactly how much money you could save by preventing them. Our free ROI calculator will show you:
+
+- **Annual cost of preventable leaks** based on your system size and leak rate
+- **Potential savings** from using FlareSeal products
+- **Return on investment** for your specific operation
+- **Hidden costs** that most people don't consider
+
+**[Calculate Your ROI Now →](/flareseal-roi-calculator)**
+
+*See the real numbers for your business and discover why leak prevention is the smartest investment you can make in today's high-cost refrigerant environment.*
+
+---
+
+*Ready to eliminate refrigerant leaks? [Shop FlareSeal products](/products) and start preventing costly leaks today.*

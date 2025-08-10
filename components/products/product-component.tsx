@@ -6,6 +6,7 @@ import { ShoppingCart, Check } from 'lucide-react';
 import { useCart } from '@/context/cart-context';
 import RelatedProducts from '@/components/products/related-products'; // Add this import
 import { trackAddToCart, trackProductView } from '@/lib/gtm';
+import Link from 'next/link'; // Add this import
 
 interface ProductDetailProps {
   product: FormattedProduct;
@@ -262,6 +263,21 @@ export default function ProductDetail({
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* ROI Calculator CTA */}
+              <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="text-center">
+                  <p className="text-sm text-blue-800 mb-3">
+                    💰 <strong>Want to see your potential savings?</strong>
+                  </p>
+                  <Link
+                    href="/flareseal-roi-calculator"
+                    className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors duration-200"
+                  >
+                    Calculate Your Savings with This Product →
+                  </Link>
+                </div>
               </div>
 
               <div className="flex flex-col space-y-3">

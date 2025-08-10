@@ -20,6 +20,7 @@ export default function Navigation() {
   const navigationLinks: NavigationLink[] = [
     { href: '/', label: 'Home' },
     { href: '/products', label: 'Shop Now' },
+    { href: '/flareseal-roi-calculator', label: 'ROI Calculator' },
     { href: '/faqs', label: 'FAQs' },
     { href: '/knowledge-base', label: 'Knowledge Base' },
   ];

@@ -66,6 +66,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/flareseal-roi-calculator`,
+      lastModified: buildTime,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/knowledge-base`,
       lastModified: buildTime,
       changeFrequency: 'monthly' as const,
