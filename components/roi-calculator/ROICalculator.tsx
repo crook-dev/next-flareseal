@@ -71,7 +71,7 @@ export default function ROICalculator() {
 
   // Watch specific fields instead of the entire form
   useEffect(() => {
-    const subscription = watch((value, { name }) => {
+    const subscription = watch((value) => {
       // Only calculate if form is valid and we have all required values
       if (isValid && value.installsPerMonth && value.serviceCallCost && 
           value.refrigerantCost && value.averageRefrigerantLoss) {
