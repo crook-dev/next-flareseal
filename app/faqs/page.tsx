@@ -80,57 +80,62 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://www.flareseal.com/faqs',
   },
-  other: {
-    'application/ld+json': JSON.stringify([
-      // FAQ Schema
-      {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        '@id': 'https://www.flareseal.com/faqs',
-        mainEntity: faqs.map((faq) => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: faq.answer
-          }
-        })),
-        about: {
-          '@type': 'Product',
-          name: 'FlareSeal',
-          description: 'Leak free flare connections for HVAC and refrigeration'
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'FlareSeal'
-        }
-      },
-      // Breadcrumb Schema
-      {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          {
-            '@type': 'ListItem',
-            position: 1,
-            name: 'Home',
-            item: 'https://www.flareseal.com/'
-          },
-          {
-            '@type': 'ListItem',
-            position: 2,
-            name: 'FAQ',
-            item: 'https://www.flareseal.com/faqs'
-          }
-        ]
-      }
-    ])
-  },
 };
 
 export default function FAQPage() {
   return (
     <main className="min-h-screen bg-gray-50">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            // FAQ Schema
+            {
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              '@id': 'https://www.flareseal.com/faqs',
+              mainEntity: faqs.map((faq) => ({
+                '@type': 'Question',
+                name: faq.question,
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: faq.answer
+                }
+              })),
+              about: {
+                '@type': 'Product',
+                name: 'FlareSeal',
+                description: 'Leak free flare connections for HVAC and refrigeration'
+              },
+              publisher: {
+                '@type': 'Organization',
+                name: 'FlareSeal'
+              }
+            },
+            // Breadcrumb Schema
+            {
+              '@context': 'https://schema.org',
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Home',
+                  item: 'https://www.flareseal.com/'
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: 'FAQ',
+                  item: 'https://www.flareseal.com/faqs'
+                }
+              ]
+            }
+          ]).replace(/</g, '\\u003c'),
+        }}
+      />
+
       {/* Hero Section */}
       <section className="bg-white border-b-2 border-gray-100">
         <div className="container py-16">

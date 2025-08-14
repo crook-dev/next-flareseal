@@ -1,6 +1,48 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Refund Policy | FlareSeal',
+  description: 'Learn about FlareSeal\'s 30-day return policy, refund process, and return guidelines for our HVAC flare connection products.',
+  alternates: {
+    canonical: 'https://www.flareseal.com/refund-policy',
+  },
+};
+
 export default function RefundPolicy() {
-  return   (
-  <main className="container py-8">
+  return (
+    <>
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: 'Refund Policy',
+            description: 'Learn about FlareSeal\'s 30-day return policy, refund process, and return guidelines for our HVAC flare connection products.',
+            url: 'https://www.flareseal.com/refund-policy',
+            breadcrumb: {
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Home',
+                  item: 'https://www.flareseal.com'
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: 'Refund Policy',
+                  item: 'https://www.flareseal.com/refund-policy'
+                }
+              ]
+            }
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
+
+      <main className="container py-8">
   <h1 className="text-center mb-8 text-primary">Refund Policy</h1>
   <p>
     We have a 30-day return policy, which means you have 30 days after
@@ -65,5 +107,6 @@ export default function RefundPolicy() {
     and post the refund too.
   </p>
     </main>
+    </>
   );
 }

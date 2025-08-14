@@ -17,12 +17,15 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: 'https://nuxt.com/social.jpg', // Update with your actual image
-      }
+        url: 'https://www.flareseal.com/social.jpg', // Updated with actual image
+        width: 1200,
+        height: 630,
+        alt: 'FlareSeal Knowledge Base',
+      },
     ],
   },
   alternates: {
-    canonical: '/knowledge-base',
+    canonical: 'https://www.flareseal.com/knowledge-base',
   },
 }
 
@@ -31,6 +34,69 @@ export default function KnowledgeBasePage() {
 
   return (
     <main className="">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            '@id': 'https://www.flareseal.com/knowledge-base',
+            name: 'FlareSeal Knowledge Base',
+            description: 'Comprehensive knowledge base for articles on flare fittings and leak prevention',
+            url: 'https://www.flareseal.com/knowledge-base',
+            mainEntity: {
+              '@type': 'ItemList',
+              name: 'FlareSeal Knowledge Base Articles',
+              description: 'Educational content about flare fittings and leak prevention',
+              numberOfItems: articles.length,
+              itemListElement: articles.map((article, index) => ({
+                '@type': 'ListItem',
+                position: index + 1,
+                item: {
+                  '@type': 'Article',
+                  '@id': `https://www.flareseal.com/knowledge-base/${article.slug}`,
+                  headline: article.title,
+                  description: article.description,
+                  datePublished: article.date,
+                  author: {
+                    '@type': 'Organization',
+                    name: 'FlareSeal'
+                  },
+                  publisher: {
+                    '@type': 'Organization',
+                    name: 'FlareSeal'
+                  }
+                }
+              }))
+            },
+            breadcrumb: {
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Home',
+                  item: 'https://www.flareseal.com'
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: 'Knowledge Base',
+                  item: 'https://www.flareseal.com/knowledge-base'
+                }
+              ]
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'FlareSeal',
+              url: 'https://www.flareseal.com',
+              logo: 'https://www.flareseal.com/images/logo.png'
+            }
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
+
       <div className="container">
       <PageHeader 
         title="FlareSeal&reg; Knowledge Base"

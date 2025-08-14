@@ -25,29 +25,34 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://www.flareseal.com',
   },
-  other: {
-    'application/ld+json': JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: 'FlareSeal',
-      url: 'https://www.flareseal.com',
-      logo: 'https://www.flareseal.com/images/logo.png',
-      description: 'Leak-free flare connection solutions for HVAC and refrigeration systems',
-      contactPoint: {
-        '@type': 'ContactPoint',
-        contactType: 'customer service',
-        email: 'support@flareseal.com' // if you have a contact page
-      },
-      sameAs: [
-        'https://www.facebook.com/flareseal',
-      ]
-    }),
-  },
 };
 
 export default function Home() {
   return (
     <div>
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'FlareSeal',
+            url: 'https://www.flareseal.com',
+            logo: 'https://www.flareseal.com/images/logo.png',
+            description: 'Leak-free flare connection solutions for HVAC and refrigeration systems',
+            contactPoint: {
+              '@type': 'ContactPoint',
+              contactType: 'customer service',
+              email: 'support@flareseal.com'
+            },
+            sameAs: [
+              'https://www.facebook.com/flareseal',
+            ]
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
+
       {/* Hero Section */}
       <HomeHero />
 

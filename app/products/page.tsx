@@ -32,79 +32,6 @@ export async function generateMetadata(): Promise<Metadata> {
       alternates: {
         canonical: 'https://www.flareseal.com/products',
       },
-      other: {
-        'application/ld+json': JSON.stringify([
-          // Product Collection Schema
-          {
-            '@context': 'https://schema.org',
-            '@type': 'CollectionPage',
-            '@id': 'https://www.flareseal.com/products',
-            name: 'FlareSeal HVAC Products',
-            description: 'Complete collection of leak-free flare connection products for HVAC mini-splits and refrigeration systems',
-            url: 'https://www.flareseal.com/products',
-            mainEntity: {
-              '@type': 'ItemList',
-              name: 'FlareSeal® Product Collection',
-              description: 'Leak-free flare connection solutions for HVAC and refrigeration',
-              numberOfItems: totalProducts,
-            },
-            breadcrumb: {
-              '@type': 'BreadcrumbList',
-              itemListElement: [
-                {
-                  '@type': 'ListItem',
-                  position: 1,
-                  name: 'Home',
-                  item: 'https://www.flareseal.com'
-                },
-                {
-                  '@type': 'ListItem',
-                  position: 2,
-                  name: 'Products',
-                  item: 'https://www.flareseal.com/products'
-                }
-              ]
-            },
-            publisher: {
-              '@type': 'Organization',
-              name: 'FlareSeal',
-              url: 'https://www.flareseal.com',
-              logo: 'https://www.flareseal.com/images/logo.png'
-            }
-          },
-          // Organization Schema
-          {
-            '@context': 'https://schema.org',
-            '@type': 'Organization',
-            '@id': 'https://www.flareseal.com/#organization',
-            name: 'FlareSeal',
-            url: 'https://www.flareseal.com',
-            logo: 'https://www.flareseal.com/images/logo.png',
-            description: 'Leak-free flare connection solutions for HVAC and refrigeration systems',
-            contactPoint: {
-              '@type': 'ContactPoint',
-              contactType: 'customer service',
-              email: 'support@flareseal.com',
-              telephone: '+1-800-455-9628'
-            },
-            sameAs: [
-              'https://www.facebook.com/flareseal'
-            ],
-            hasOfferCatalog: {
-              '@type': 'OfferCatalog',
-              name: 'FlareSeal Products',
-              itemListElement: rawCollections.map(collection => ({
-                '@type': 'Offer',
-                itemOffered: {
-                  '@type': 'Product',
-                  name: collection.title,
-                  description: collection.description || `${collection.title} flare seal products`
-                }
-              }))
-            }
-          }
-        ])
-      },
     };
     return metadata;
     
@@ -201,8 +128,91 @@ export default async function ProductsPage() {
         ]
       : nonEmptyCollections; // If less than 2 collections, keep original order
 
+    // Calculate total products for JSON-LD
+    const totalProducts = rawCollections.reduce((total, collection) => {
+      return total + collection.products.length;
+    }, 0);
+
     return (
       <div className="min-h-screen bg-gray-50">
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              // Product Collection Schema
+              {
+                '@context': 'https://schema.org',
+                '@type': 'CollectionPage',
+                '@id': 'https://www.flareseal.com/products',
+                name: 'FlareSeal HVAC Products',
+                description: 'Complete collection of leak-free flare connection products for HVAC mini-splits and refrigeration systems',
+                url: 'https://www.flareseal.com/products',
+                mainEntity: {
+                  '@type': 'ItemList',
+                  name: 'FlareSeal® Product Collection',
+                  description: 'Leak-free flare connection solutions for HVAC and refrigeration',
+                  numberOfItems: totalProducts,
+                },
+                breadcrumb: {
+                  '@type': 'BreadcrumbList',
+                  itemListElement: [
+                    {
+                      '@type': 'ListItem',
+                      position: 1,
+                      name: 'Home',
+                      item: 'https://www.flareseal.com'
+                    },
+                    {
+                      '@type': 'ListItem',
+                      position: 2,
+                      name: 'Products',
+                      item: 'https://www.flareseal.com/products'
+                    }
+                  ]
+                },
+                publisher: {
+                  '@type': 'Organization',
+                  name: 'FlareSeal',
+                  url: 'https://www.flareseal.com',
+                  logo: 'https://www.flareseal.com/images/logo.png'
+                }
+              },
+              // Organization Schema
+              {
+                '@context': 'https://schema.org',
+                '@type': 'Organization',
+                '@id': 'https://www.flareseal.com/#organization',
+                name: 'FlareSeal',
+                url: 'https://www.flareseal.com',
+                logo: 'https://www.flareseal.com/images/logo.png',
+                description: 'Leak-free flare connection solutions for HVAC and refrigeration systems',
+                contactPoint: {
+                  '@type': 'ContactPoint',
+                  contactType: 'customer service',
+                  email: 'support@flareseal.com',
+                  telephone: '+1-800-455-9628'
+                },
+                sameAs: [
+                  'https://www.facebook.com/flareseal'
+                ],
+                hasOfferCatalog: {
+                  '@type': 'OfferCatalog',
+                  name: 'FlareSeal Products',
+                  itemListElement: rawCollections.map(collection => ({
+                    '@type': 'Offer',
+                    itemOffered: {
+                      '@type': 'Product',
+                      name: collection.title,
+                      description: collection.description || `${collection.title} flare seal products`
+                    }
+                  }))
+                }
+              }
+            ]).replace(/</g, '\\u003c'),
+          }}
+        />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Compact Header */}
           <div className="py-12 text-center border-b border-gray-200 bg-white mb-8">

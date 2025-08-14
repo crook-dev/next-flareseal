@@ -23,110 +23,115 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://www.flareseal.com/flareseal-roi-calculator',
   },
-  other: {
-    'application/ld+json': JSON.stringify([
-      // WebPage Schema
-      {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        '@id': 'https://www.flareseal.com/flareseal-roi-calculator',
-        name: 'FlareSeal ROI Calculator',
-        description: 'Calculate your real savings from preventing refrigerant leaks with FlareSeal. See your ROI, annual cost savings, and how much money you can save by preventing HVAC flare connection leaks.',
-        url: 'https://www.flareseal.com/flareseal-roi-calculator',
-        breadcrumb: {
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            {
-              '@type': 'ListItem',
-              position: 1,
-              name: 'Home',
-              item: 'https://www.flareseal.com'
-            },
-            {
-              '@type': 'ListItem',
-              position: 2,
-              name: 'ROI Calculator',
-              item: 'https://www.flareseal.com/flareseal-roi-calculator'
-            }
-          ]
-        },
-        mainEntity: {
-          '@type': 'SoftwareApplication',
-          name: 'FlareSeal ROI Calculator',
-          description: 'Interactive calculator to determine cost savings and ROI from preventing HVAC refrigerant leaks',
-          applicationCategory: 'BusinessApplication',
-          operatingSystem: 'Web Browser',
-          offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD',
-            description: 'Free ROI calculator tool'
-          }
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'FlareSeal',
-          url: 'https://www.flareseal.com',
-          logo: 'https://www.flareseal.com/images/logo.png'
-        }
-      },
-      // Organization Schema
-      {
-        '@context': 'https://schema.org',
-        '@type': 'Organization',
-        '@id': 'https://www.flareseal.com/#organization',
-        name: 'FlareSeal',
-        url: 'https://www.flareseal.com',
-        logo: 'https://www.flareseal.com/images/logo.png',
-        description: 'Leak-free flare connection solutions for HVAC and refrigeration systems',
-        contactPoint: {
-          '@type': 'ContactPoint',
-          contactType: 'customer service',
-          email: 'support@flareseal.com',
-          telephone: '+1-800-455-9628'
-        },
-        sameAs: [
-          'https://www.facebook.com/flareseal'
-        ]
-      },
-      // FAQ Schema for the calculator
-      {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: [
-          {
-            '@type': 'Question',
-            name: 'How much can I save by preventing refrigerant leaks?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'Savings vary by installation volume and leak rate, but typically range from $1,000 to $10,000+ annually depending on your operation size and current leak rates.'
-            }
-          },
-          {
-            '@type': 'Question',
-            name: 'What is the ROI on FlareSeal products?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'ROI typically ranges from 200% to 800% depending on your specific operation, with most customers seeing returns within 3-6 months of implementation.'
-            }
-          },
-          {
-            '@type': 'Question',
-            name: 'How does the ROI calculator work?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'The calculator analyzes your monthly installations, industry leak rates, service call costs, and refrigerant costs to determine your potential annual savings and return on investment from preventing leaks.'
-            }
-          }
-        ]
-      }
-    ]),
-  },
 }
 
 export default function ROICalculatorPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-5">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            // WebPage Schema
+            {
+              '@context': 'https://schema.org',
+              '@type': 'WebPage',
+              '@id': 'https://www.flareseal.com/flareseal-roi-calculator',
+              name: 'FlareSeal ROI Calculator',
+              description: 'Calculate your real savings from preventing refrigerant leaks with FlareSeal. See your ROI, annual cost savings, and how much money you can save by preventing HVAC flare connection leaks.',
+              url: 'https://www.flareseal.com/flareseal-roi-calculator',
+              breadcrumb: {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Home',
+                    item: 'https://www.flareseal.com'
+                  },
+                  {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: 'ROI Calculator',
+                    item: 'https://www.flareseal.com/flareseal-roi-calculator'
+                  }
+                ]
+              },
+              mainEntity: {
+                '@type': 'SoftwareApplication',
+                name: 'FlareSeal ROI Calculator',
+                description: 'Interactive calculator to determine cost savings and ROI from preventing HVAC refrigerant leaks',
+                applicationCategory: 'BusinessApplication',
+                operatingSystem: 'Web Browser',
+                offers: {
+                  '@type': 'Offer',
+                  price: '0',
+                  priceCurrency: 'USD',
+                  description: 'Free ROI calculator tool'
+                }
+              },
+              publisher: {
+                '@type': 'Organization',
+                name: 'FlareSeal',
+                url: 'https://www.flareseal.com',
+                logo: 'https://www.flareseal.com/images/logo.png'
+              }
+            },
+            // Organization Schema
+            {
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              '@id': 'https://www.flareseal.com/#organization',
+              name: 'FlareSeal',
+              url: 'https://www.flareseal.com',
+              logo: 'https://www.flareseal.com/images/logo.png',
+              description: 'Leak-free flare connection solutions for HVAC and refrigeration systems',
+              contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'customer service',
+                email: 'support@flareseal.com',
+                telephone: '+1-800-455-9628'
+              },
+              sameAs: [
+                'https://www.facebook.com/flareseal'
+              ]
+            },
+            // FAQ Schema for the calculator
+            {
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: [
+                {
+                  '@type': 'Question',
+                  name: 'How much can I save by preventing refrigerant leaks?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Savings vary by installation volume and leak rate, but typically range from $1,000 to $10,000+ annually depending on your operation size and current leak rates.'
+                  }
+                },
+                {
+                  '@type': 'Question',
+                  name: 'What is the ROI on FlareSeal products?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'ROI typically ranges from 200% to 800% depending on your specific operation, with most customers seeing returns within 3-6 months of implementation.'
+                  }
+                },
+                {
+                  '@type': 'Question',
+                  name: 'How does the ROI calculator work?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'The calculator analyzes your monthly installations, industry leak rates, service call costs, and refrigerant costs to determine your potential annual savings and return on investment from preventing leaks.'
+                  }
+                }
+              ]
+            }
+          ]).replace(/</g, '\\u003c'),
+        }}
+      />
+
       <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
         <header className="bg-gradient-to-r from-slate-700 to-blue-600 text-white p-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-3">FlareSeal ROI Calculator</h1>

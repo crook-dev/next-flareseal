@@ -1,9 +1,50 @@
 import Link from "next/link";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy | FlareSeal',
+  description: 'Learn about how FlareSeal collects, uses, and protects your personal information when you visit our website or make a purchase.',
+  alternates: {
+    canonical: 'https://www.flareseal.com/privacy-policy',
+  },
+};
 
 export default function PrivacyPolicy() {
   return (
-  <main>
-  <div className="container py-8">
+  <>
+    {/* JSON-LD Structured Data */}
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: 'Privacy Policy',
+          description: 'Learn about how FlareSeal collects, uses, and protects your personal information when you visit our website or make a purchase.',
+          url: 'https://www.flareseal.com/privacy-policy',
+          breadcrumb: {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: 'https://www.flareseal.com'
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Privacy Policy',
+                item: 'https://www.flareseal.com/privacy-policy'
+              }
+            ]
+          }
+        }).replace(/</g, '\\u003c'),
+      }}
+    />
+
+    <main>
+    <div className="container py-8">
     <h1 className="text-center mb-8 text-primary">Privacy Policy</h1>
     <p>
       This Privacy Policy describes how flareseal.com (the “Site” or “we”)
@@ -407,5 +448,6 @@ export default function PrivacyPolicy() {
     </p>
   </div>
 </main>
+</>
 )
 }

@@ -31,12 +31,6 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     const firstVariant = product.variants[0];
     const mainImage = product.images[0];
     
-    // Fetch collections to determine product category
-    const rawCollections = await getAllCollections();
-    const productCollection = rawCollections.find(collection => 
-      collection.products.some(p => p.id === product.id)
-    );
-    
     // Enhanced title with SEO keywords
     const seoTitle = `${product.title} | ${firstVariant?.price ? `$${firstVariant.price}` : ''} FlareSeal® HVAC Flare Connection`.trim();
     
@@ -83,121 +77,6 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         'product:price:amount': firstVariant?.price?.toString() || '0',
         'product:price:currency': firstVariant?.currencyCode || 'USD',
         'product:availability': firstVariant?.availableForSale ? 'in stock' : 'out of stock',
-        'application/ld+json': JSON.stringify([
-          // Product Schema
-          {
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            '@id': `https://www.flareseal.com/products/${handle}`,
-            name: product.title,
-            description: product.description || `${product.title} - Professional HVAC flare connection solution`,
-            brand: {
-              '@type': 'Brand',
-              name: 'FlareSeal'
-            },
-            manufacturer: {
-              '@type': 'Organization',
-              name: 'FlareSeal',
-              url: 'https://www.flareseal.com'
-            },
-            image: product.images.map(img => img.url),
-            offers: product.variants.map(variant => ({
-              '@type': 'Offer',
-              '@id': `https://www.flareseal.com/products/${handle}#variant-${variant.id}`,
-              price: variant.price,
-              priceCurrency: variant.currencyCode,
-              availability: variant.availableForSale 
-                ? 'https://schema.org/InStock' 
-                : 'https://schema.org/OutOfStock',
-              seller: {
-                '@type': 'Organization',
-                name: 'FlareSeal'
-              },
-              priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 year from now
-              itemCondition: 'https://schema.org/NewCondition',
-              shippingDetails: {
-                '@type': 'OfferShippingDetails',
-                shippingRate: {
-                  '@type': 'MonetaryAmount',
-                  value: '0',
-                  currency: 'USD'
-                },
-                deliveryTime: {
-                  '@type': 'ShippingDeliveryTime',
-                  handlingTime: {
-                    '@type': 'QuantitativeValue',
-                    minValue: 1,
-                    maxValue: 2,
-                    unitCode: 'DAY'
-                  },
-                  transitTime: {
-                    '@type': 'QuantitativeValue', 
-                    minValue: 3,
-                    maxValue: 7,
-                    unitCode: 'DAY'
-                  }
-                }
-              }
-            })),
-            category: productCollection?.title || 'HVAC Products',
-            productID: product.id,
-            sku: firstVariant?.id || product.id,
-            gtin: product.tags?.find(tag => tag.startsWith('UPC:'))?.replace('UPC:', '') || undefined,
-            // aggregateRating: {
-            //   '@type': 'AggregateRating',
-            //   ratingValue: '4.8',
-            //   reviewCount: '127', // You can update these with real review data
-            //   bestRating: '5',
-            //   worstRating: '1'
-            // },
-            // review: [
-            //   {
-            //     '@type': 'Review',
-            //     reviewRating: {
-            //       '@type': 'Rating',
-            //       ratingValue: '5',
-            //       bestRating: '5'
-            //     },
-            //     author: {
-            //       '@type': 'Person',
-            //       name: 'HVAC Professional'
-            //     },
-            //     reviewBody: 'Excellent product for preventing flare leaks. Easy to install and very effective.'
-            //   }
-            // ]
-          },
-          // Breadcrumb Schema
-          {
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              {
-                '@type': 'ListItem',
-                position: 1,
-                name: 'Home',
-                item: 'https://www.flareseal.com'
-              },
-              {
-                '@type': 'ListItem',
-                position: 2,
-                name: 'Products',
-                item: 'https://www.flareseal.com/products'
-              },
-              ...(productCollection ? [{
-                '@type': 'ListItem',
-                position: 3,
-                name: productCollection.title,
-                item: 'https://www.flareseal.com/products'
-              }] : []),
-              {
-                '@type': 'ListItem',
-                position: productCollection ? 4 : 3,
-                name: product.title,
-                item: `https://www.flareseal.com/products/${handle}`
-              }
-            ]
-          }
-        ])
       },
     };
   } catch (error) {
@@ -255,6 +134,106 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            // Product Schema
+            {
+              '@context': 'https://schema.org',
+              '@type': 'Product',
+              '@id': `https://www.flareseal.com/products/${handle}`,
+              name: product.title,
+              description: product.description || `${product.title} - Professional HVAC flare connection solution`,
+              brand: {
+                '@type': 'Brand',
+                name: 'FlareSeal'
+              },
+              manufacturer: {
+                '@type': 'Organization',
+                name: 'FlareSeal',
+                url: 'https://www.flareseal.com'
+              },
+              image: product.images.map(img => img.url),
+              offers: product.variants.map(variant => ({
+                '@type': 'Offer',
+                '@id': `https://www.flareseal.com/products/${handle}#variant-${variant.id}`,
+                price: variant.price,
+                priceCurrency: variant.currencyCode,
+                availability: variant.availableForSale 
+                  ? 'https://schema.org/InStock' 
+                  : 'https://schema.org/OutOfStock',
+                seller: {
+                  '@type': 'Organization',
+                  name: 'FlareSeal'
+                },
+                priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 year from now
+                itemCondition: 'https://schema.org/NewCondition',
+                shippingDetails: {
+                  '@type': 'OfferShippingDetails',
+                  shippingRate: {
+                    '@type': 'MonetaryAmount',
+                    value: '0',
+                    currency: 'USD'
+                  },
+                  deliveryTime: {
+                    '@type': 'ShippingDeliveryTime',
+                    handlingTime: {
+                      '@type': 'QuantitativeValue',
+                      minValue: 1,
+                      maxValue: 2,
+                      unitCode: 'DAY'
+                    },
+                    transitTime: {
+                      '@type': 'QuantitativeValue', 
+                      minValue: 3,
+                      maxValue: 7,
+                      unitCode: 'DAY'
+                    }
+                  }
+                }
+              })),
+              category: productCollection?.title || 'HVAC Products',
+              productID: product.id,
+              sku: product.variants[0]?.id || product.id,
+              gtin: product.tags?.find(tag => tag.startsWith('UPC:'))?.replace('UPC:', '') || undefined,
+            },
+            // Breadcrumb Schema
+            {
+              '@context': 'https://schema.org',
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Home',
+                  item: 'https://www.flareseal.com'
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: 'Products',
+                  item: 'https://www.flareseal.com/products'
+                },
+                ...(productCollection ? [{
+                  '@type': 'ListItem',
+                  position: 3,
+                  name: productCollection.title,
+                  item: 'https://www.flareseal.com/products'
+                }] : []),
+                {
+                  '@type': 'ListItem',
+                  position: productCollection ? 4 : 3,
+                  name: product.title,
+                  item: `https://www.flareseal.com/products/${handle}`
+                }
+              ]
+            }
+          ]).replace(/</g, '\\u003c'),
+        }}
+      />
+
       {/* Breadcrumb */}
       <nav className="bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
